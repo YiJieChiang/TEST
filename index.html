@@ -8,13 +8,13 @@
     <!-- 使用 Data URI 修復 Favicon 404 錯誤 -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎬%3C/text%3E%3C/svg%3E">
     
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS (Play CDN 警告在無建構環境下是正常的) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- 投影片產生函式庫 -->
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
     
-    <!-- 全域墊片：確保環境變數存取穩定，修正 process.env 在不同平台的差異 -->
+    <!-- 全域墊片：確保環境變數存取穩定 -->
     <script>
       window.process = window.process || { env: {} };
     </script>
