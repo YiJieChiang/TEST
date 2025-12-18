@@ -2,8 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { LessonPlan, InputType, AcademicLevel } from "./types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-
 export const generateLessonPlan = async (params: {
   inputType: InputType;
   sourceValue: string;
@@ -14,6 +12,16 @@ export const generateLessonPlan = async (params: {
   transcript: string;
 }): Promise<LessonPlan> => {
   const { inputType, sourceValue, subject, level, segmentCount, questionCount, transcript } = params;
+
+  // 安全檢查：確保在存取 process.env 時不會因為 process 未定義而崩潰
+  const env = typeof process !== 'undefined' ? process.env : (window as any).process?.env;
+  const apiKey = env?.API_KEY;
+  
+  if (!apiKey) {
+    throw new Error("找不到 API Key。請確保您已在 AI Studio 中設定正確，或檢查環境變數。");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
 
   const prompt = `
     你是一位台灣的高中/技職教育與影片教材製作專家。請根據以下資訊設計一份繁體中文教案。
@@ -111,8 +119,11 @@ export const generateLessonPlan = async (params: {
   });
 
   try {
-    return JSON.parse(response.text || "{}");
+    const text = response.text;
+    if (!text) throw new Error("AI 未回傳內容");
+    return JSON.parse(text);
   } catch (e) {
-    throw new Error("無法解析 AI 回傳內容，請再試一次。");
+    console.error("Parse error:", e);
+    throw new Error("無法解析 AI 回傳內容，可能是因為內容長度超過限制或格式錯誤。");
   }
 };
