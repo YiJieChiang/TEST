@@ -1,0 +1,5 @@
+{
+  "name": "AI 影音教材教案生成器",
+  "description": "這是一款專為台灣教育者設計的 AI 教案生成工具，能根據影片逐字稿、電影或 YouTube 內容，自動生成符合 108 課綱的教學規劃、學習段落、專業解析及課後問答，並支援 Word 與 PPT 匯出。",
+  "requestFramePermissions": []
+}
