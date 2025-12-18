@@ -13,13 +13,14 @@ export const generateLessonPlan = async (params: {
 }): Promise<LessonPlan> => {
   const { inputType, sourceValue, subject, level, segmentCount, questionCount, transcript } = params;
 
-  // 取得 API Key，優先檢查環境變數
-  const apiKey = (typeof process !== 'undefined' ? process.env?.API_KEY : (window as any).process?.env?.API_KEY);
+  // 取得 API Key
+  const apiKey = process.env.API_KEY;
   
   if (!apiKey) {
-    throw new Error("系統未偵測到 API Key。請確保環境變數 API_KEY 已正確設定。");
+    throw new Error("系統未偵測到 API Key。請在 Vercel 或系統環境變數中設定 API_KEY。");
   }
 
+  // 每次調用時重新初始化，確保使用最新的環境變數
   const ai = new GoogleGenAI({ apiKey });
 
   const prompt = `
@@ -119,10 +120,14 @@ export const generateLessonPlan = async (params: {
     });
 
     const text = response.text;
-    if (!text) throw new Error("AI 未回傳任何文字內容。");
+    if (!text) throw new Error("AI 未回傳內容內容。");
     return JSON.parse(text);
   } catch (e: any) {
     console.error("Gemini API Error:", e);
-    throw new Error(e.message || "生成教案時發生意外錯誤，請檢查網路連線或稍後再試。");
+    // 檢查是否為配額或權限錯誤
+    const errorMessage = e.message || "未知錯誤";
+    if (errorMessage.includes("429")) throw new Error("API 調用次數過多，請稍後再試。");
+    if (errorMessage.includes("403")) throw new Error("API Key 權限不足或無效。");
+    throw new Error(`生成教案失敗：${errorMessage}`);
   }
 };
