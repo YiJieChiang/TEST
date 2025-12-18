@@ -5,15 +5,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI 影音教材教案生成器</title>
-    <!-- 修復 Favicon 404 錯誤，使用 Data URI 形式的 SVG -->
+    <!-- 使用 Data URI 修復 Favicon 404 錯誤 -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎬%3C/text%3E%3C/svg%3E">
     
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN (警告為開發者提醒，在此無建構流程環境中是標準做法) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 第三方函式庫 -->
+    <!-- 投影片產生函式庫 -->
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
     
+    <!-- 全域墊片：確保環境變數存取穩定 -->
+    <script>
+      window.process = window.process || { env: {} };
+    </script>
+
     <script type="importmap">
 {
   "imports": {
